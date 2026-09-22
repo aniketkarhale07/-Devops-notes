@@ -1,0 +1,22 @@
+node {
+    stage('Code') {
+        git branch: 'main', url: 'https://github.com/aniketkarhale07/java.git'
+    }
+
+    stage('Build') {
+        sh 'mvn clean package'
+    }
+
+    stage('Deploy to Tomcat') {
+        deploy adapters: [
+            tomcat9(
+                alternativeDeploymentContext: '',
+                credentialsId: 'tomcat',
+                path: '',
+                url: 'http://localhost:8085'
+            )
+        ],
+        contextPath: 'scripting',
+        war: 'target/*.war'
+    }
+}
